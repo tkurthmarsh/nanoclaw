@@ -89,7 +89,10 @@ function formatResetTime(resetsAt: string): string {
     const now = new Date();
     // If resets today, show time only
     if (date.toDateString() === now.toDateString()) {
-      return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+      return date.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+      });
     }
     // Otherwise show day name
     return date.toLocaleDateString('en-US', { weekday: 'long' });
@@ -115,7 +118,10 @@ async function checkUsage(deps: UsageMonitorDeps): Promise<void> {
   if (!usage) return;
 
   logger.info(
-    { fiveHour: usage.fiveHour.utilization, sevenDay: usage.sevenDay.utilization },
+    {
+      fiveHour: usage.fiveHour.utilization,
+      sevenDay: usage.sevenDay.utilization,
+    },
     'Usage check',
   );
 
@@ -172,23 +178,16 @@ async function checkUsage(deps: UsageMonitorDeps): Promise<void> {
 }
 
 export function startUsageMonitor(deps: UsageMonitorDeps): void {
-  logger.info(
-    { intervalMs: USAGE_POLL_INTERVAL },
-    'Starting usage monitor',
-  );
+  logger.info({ intervalMs: USAGE_POLL_INTERVAL }, 'Starting usage monitor');
 
   // Initial check after a short delay (let channels settle)
   setTimeout(() => {
-    checkUsage(deps).catch((err) =>
-      logger.warn({ err }, 'Usage check failed'),
-    );
+    checkUsage(deps).catch((err) => logger.warn({ err }, 'Usage check failed'));
   }, 10_000);
 
   // Recurring checks
   setInterval(() => {
-    checkUsage(deps).catch((err) =>
-      logger.warn({ err }, 'Usage check failed'),
-    );
+    checkUsage(deps).catch((err) => logger.warn({ err }, 'Usage check failed'));
   }, USAGE_POLL_INTERVAL);
 }
 
