@@ -182,6 +182,16 @@ function buildVolumeMounts(
     });
   }
 
+  // GitHub CLI credentials (for gh commands inside the container)
+  const ghDir = path.join(homeDir, '.config', 'gh');
+  if (fs.existsSync(ghDir)) {
+    mounts.push({
+      hostPath: ghDir,
+      containerPath: '/home/node/.config/gh',
+      readonly: true,
+    });
+  }
+
   // Per-group IPC namespace: each group gets its own IPC directory
   // This prevents cross-group privilege escalation via IPC
   const groupIpcDir = resolveGroupIpcPath(group.folder);
